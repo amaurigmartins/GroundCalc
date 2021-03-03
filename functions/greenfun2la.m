@@ -1,15 +1,4 @@
-function [ soma ] = somagama( rho1, rho2, h, xs, ys, zs, xe, ye, ze, comp, x0, y0, z0 )
-%somagama: Método da Segmentação-Integração para cálculo do GPR,
-%considerando a fonte e suas imagens complexas. Saída é a GPR normalizada
-%pela densidade de corrente de fuga (delta).
-%   Função adota os seguintes parâmetros de entrada:
-%   rho1 -  resistividade da camada superficial, em ohms.m.
-%   rho2 -  resistividade da camada profunda, em ohms.m.
-%   h - espessura da primeira camada do solo.
-%   xs, ys, zs - coordenadas da extremidade inicial do condutor fonte.
-%   xe, ye, ze - coordenadas da extremidade final do condutor fonte.
-%   comp - comprimento do condutor fonte.
-%   x0, y0, z0 - coordenadas do ponto de observação.
+function [ soma ] = greenfun2la( rho1, rho2, h, xs, ys, zs, xe, ye, ze, comp, x0, y0, z0 )
 
 TOL=0.0001;
 k=(rho2-rho1)/(rho2+rho1);
@@ -19,7 +8,7 @@ ze=abs(ze);
 z0=abs(z0);
 % l=sqrt((xs-xe)^2+(ys-ye)^2+(zs-ze)^2);
 l=comp;
-if abs(zs-ze) <= TOL %Condutor horizontal
+if abs(zs-ze) <= TOL % horizontal
     alfa=atan2((ye-ys),(xe-xs));
     A=[cos(alfa) -sin(alfa); sin(alfa) -cos(alfa)];
     B=[x0-xs; y0-ys];
@@ -33,7 +22,7 @@ if abs(zs-ze) <= TOL %Condutor horizontal
     u0=transf(1,1);
     v0=transf(2,1);
     w0=z0-zs;
-else %Condutor vertical
+else % vertical
     u0=z0-zs;
     v0=ys-y0;
     w0=xs-x0;
@@ -44,8 +33,8 @@ s=psi(TOL)+psi(e);
 M = 10;
 n = 1;
 
-if zs <= h % Fonte está na primeira camada
-    if z0 <= h %Ponto vítima está na primeira camada
+if zs <= h % src at top layer
+    if z0 <= h % obs at top layer
         %Equação 5-2
         A=(rho1)/(4*pi);
         while abs(M) > TOL
@@ -53,8 +42,8 @@ if zs <= h % Fonte está na primeira camada
             s = s + M;
             n = n + 1;
         end
-    else %Ponto vítima está na segunda camada
-        %Equação 5-3
+    else % ob at bottom layer
+        %eqn 5-3
         A=(rho1*(1+k))/(4*pi);
         while abs(M) > TOL
             M = k^n*(psi(n*h)+psi(n*h+e));
@@ -62,17 +51,17 @@ if zs <= h % Fonte está na primeira camada
             n = n + 1;
         end
     end
-else % Fonte está na segunda camada
-    if z0 <= h %Ponto vítima está na primeira camada
-        %Equação 5-4
+else % src at bottom layer
+    if z0 <= h %obs at top layer
+        %eqn 5-4
         A=(rho2)/(4*pi);
         while abs(M) > TOL
             M = k^n*(psi(-n*h)+psi(n*h+e)-psi((-n-1)*h)-psi((n-1)*h+e));
             s = s + M;
             n = n + 1;
         end
-    else %Ponto vítima está na segunda camada
-        %Equação 5-5
+    else %obs at bottom layer
+        %eqn 5-5
         A=(rho2)/(4*pi);
         while abs(M) > TOL
             M = k^n*(psi(n*h+e)-psi((n-2)*h+e));
