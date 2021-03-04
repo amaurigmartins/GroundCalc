@@ -93,27 +93,6 @@ try
     waitbar(1,h,'Computing leakage current densities... Done!')
     
     fig=1;
-    if plot_curr
-        for i=1:size(coords_src,1)
-            if abs(coords_src(i,3)-coords_src(i,6))<0.0001
-                offx=0;
-                offy=0;
-                offz=0;
-            else
-                offx=0.0001;
-                offy=0.0002;
-                offz=0.0003;
-            end
-            clinep([coords_src(i,1) coords_src(i,4)+offx],[coords_src(i,2) coords_src(i,5)+offy],[coords_src(i,3) coords_src(i,6)+offz],[delta(i) delta(i)]);
-            hold on;
-        end
-        colorbar;
-        colormap(jet);
-        grid on;
-        hold off;
-        title('Leakage current distribution')
-        fig=fig+1;
-    end
     
     waitbar(0,h,'Computing surface potentials...')
     [X,Y]=meshgrid(coordX_prof, coordY_prof);
@@ -208,9 +187,36 @@ try
         end
         caxis([vmin vmax])
         title('Step voltages distribution');
+        fig=fig+1;
+    end
+    
+
+    
+    if plot_curr
+        for i=1:size(coords_src,1)
+            if abs(coords_src(i,3)-coords_src(i,6))<0.0001
+                offx=0;
+                offy=0;
+                offz=0;
+            else
+                offx=0.0001;
+                offy=0.0002;
+                offz=0.0003;
+            end
+            figure(fig)
+            clinep([coords_src(i,1) coords_src(i,4)+offx],[coords_src(i,2) coords_src(i,5)+offy],[coords_src(i,3) coords_src(i,6)+offz],[delta(i) delta(i)]);
+            hold on;
+        end
+        colorbar;
+        colormap(jet);
+        grid on;
+        hold off;
+        title('Leakage currents distribution')
+        fig=fig+1;
     end
     
     close(h);
+    
     tf=toc(ti);
     
     fprintf('\n\nCOMPUTATION SUMMARY:\n--------------------\n');
