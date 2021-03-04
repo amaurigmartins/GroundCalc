@@ -1,2 +1,2 @@
 # groundcalc
-A Very Simple Grounding Grid Calculator
+A very simple grounding grid calculator for didatic purposes.
