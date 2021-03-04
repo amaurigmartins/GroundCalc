@@ -212,6 +212,7 @@ try
         grid on;
         hold off;
         title('Leakage currents distribution')
+        axis equal
         fig=fig+1;
     end
     
