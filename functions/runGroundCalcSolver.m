@@ -137,7 +137,7 @@ try
     Et=abs(GPR-V);
     [Usx,Usy]=gradient(Us,1,1);
     TotalGrad=(Usx.^2+Usy.^2).^0.5;
-    waitbar(1,h,'Computing surface potentia(ls... Done!')
+    waitbar(1,h,'Computing surface potentials... Done!')
     
     if plot_surf
         figure(fig)
