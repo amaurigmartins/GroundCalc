@@ -1,11 +1,11 @@
-function [out] = runGroundCalcSolver(fname, cond_radius, rho_top, rho_bottom, h_top, i_src, t_fault, rho_cover, h_cover, plot_surf, plot_curr, plot_touch, plot_step)
+function [out] = runGroundCalcSolver(fname, delta, buffer, cond_radius, rho_top, rho_bottom, h_top, i_src, t_fault, rho_cover, h_cover, plot_surf, plot_curr, plot_touch, plot_step, plot_grid)
 addpath('../functions')
 
 try
     ti=tic;
-    dx=.5;
+    dx=delta;
     dy=dx;
-    SB=5;
+    SB=buffer*delta;
     h = waitbar(0,'Parsing input data...','Name','Progress...');
     coords_src = importdata(fname);
     coords_src = coords_src.data;
@@ -92,8 +92,6 @@ try
     Rg=V/i_src;
     waitbar(1,h,'Computing leakage current densities... Done!')
     
-    fig=1;
-    
     waitbar(0,h,'Computing surface potentials...')
     [X,Y]=meshgrid(coordX_prof, coordY_prof);
     Ib=0.116/sqrt(t_fault);
@@ -140,7 +138,10 @@ try
     waitbar(1,h,'Computing surface potentials... Done!')
     
     if plot_surf
-        figure(fig)
+        figure(1)
+        if plot_grid
+            for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(Us))*1.05 max(max(Us))*1.05],'k-','LineWidth',1.5); hold on; end;
+        end
         surf(X, Y, Us,'EdgeColor', 'None', 'facecolor', 'interp')
         xlim([min(min(X)) max(max(X))]);
         ylim([min(min(Y)) max(max(Y))]);
@@ -149,11 +150,13 @@ try
         colorbar
         colormap(jet);
         title('Surface GPR distribution');
-        fig=fig+1;
     end
     
     if plot_touch
-        figure(fig)
+        figure(2)
+        if plot_grid
+            for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(Et))*1.05 max(max(Et))*1.05],'k-','LineWidth',1.5); hold on; end;
+        end
         surf(X, Y, Et,'EdgeColor', 'None', 'facecolor', 'interp')
         xlim([min(min(X)) max(max(X))]);
         ylim([min(min(Y)) max(max(Y))]);
@@ -167,12 +170,14 @@ try
             vmax=2*vmin;
         end
         caxis([vmin vmax])
-        title('Touch voltages distribution');
-        fig=fig+1;
+        title(sprintf('Touch voltages distribution, E_{t,lim} = %1.0f V',Et_max));
     end
     
     if plot_step
-        figure(fig)
+        figure(3)
+        if plot_grid
+            for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(TotalGrad))*1.05 max(max(TotalGrad))*1.05],'k-','LineWidth',1.5); hold on; end;
+        end
         surf(X, Y, TotalGrad,'EdgeColor', 'None', 'facecolor', 'interp')
         xlim([min(min(X)) max(max(X))]);
         ylim([min(min(Y)) max(max(Y))]);
@@ -186,8 +191,7 @@ try
             vmax=2*vmin;
         end
         caxis([vmin vmax])
-        title('Step voltages distribution');
-        fig=fig+1;
+        title(sprintf('Step voltages distribution, E_{p,lim} = %1.0f V',Ep_max));
     end
     
 
@@ -203,17 +207,17 @@ try
                 offy=0.0002;
                 offz=0.0003;
             end
-            figure(fig)
+            figure(4)
             clinep([coords_src(i,1) coords_src(i,4)+offx],[coords_src(i,2) coords_src(i,5)+offy],[coords_src(i,3) coords_src(i,6)+offz],[delta(i) delta(i)]);
             hold on;
         end
+        view([45 45]);
         colorbar;
         colormap(jet);
         grid on;
         hold off;
         title('Leakage currents distribution')
         axis equal
-        fig=fig+1;
     end
     
     close(h);
