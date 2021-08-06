@@ -20,8 +20,9 @@ plot_curr=true;
 plot_touch=true;
 plot_step=true;
 plot_grid=true;
+supress_messages=true;
 
 try
-    runGroundCalcSolver(fname, delta, buffer, cond_radius, rho_top, rho_bottom, h_top, i_src, t_fault, rho_cover, h_cover, plot_surf, plot_curr, plot_touch, plot_step, plot_grid);
+    runGroundCalcSolver(fname, delta, buffer, cond_radius, rho_top, rho_bottom, h_top, i_src, t_fault, rho_cover, h_cover, plot_surf, plot_curr, plot_touch, plot_step, plot_grid, supress_messages);
 catch err
 end
