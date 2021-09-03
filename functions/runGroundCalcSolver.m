@@ -1,14 +1,16 @@
-function [out] = runGroundCalcSolver(fname, delta, buffer, cond_radius, rho_top, rho_bottom, h_top, i_src, t_fault, rho_cover, h_cover, plot_surf, plot_curr, plot_touch, plot_step, plot_grid)
-addpath('../functions')
+function [out] = runGroundCalcSolver(coords_src, delta, buffer, cond_radius, rho_top, rho_bottom, h_top, i_src, t_fault, rho_cover, h_cover, plot_surf, plot_curr, plot_touch, plot_step, plot_grid, supress_messages, save_file)
+% addpath('../functions')
 
 try
     ti=tic;
     dx=delta;
     dy=dx;
     SB=buffer*delta;
-    h = waitbar(0,'Parsing input data...','Name','Progress...');
-    coords_src = importdata(fname);
-    coords_src = coords_src.data;
+    if ~ supress_messages
+        h = waitbar(0,'Parsing input data...','Name','Progress...');
+    end
+%     coords_src = importdata(fname);
+%     coords_src = coords_src.data;
     for i=1:size(coords_src,1)
         xi=coords_src(i,1);
         xf=coords_src(i,4);
@@ -19,8 +21,8 @@ try
         L(i) = sqrt((xf-xi)^2+(yf-yi)^2+(zf-zi)^2);
     end
     MAX_LEN = max(L) / 10;
-    if MAX_LEN < 2*cond_radius
-        MAX_LEN=4*cond_radius;
+    if MAX_LEN < 2*max(cond_radius)
+        MAX_LEN=4*max(cond_radius);
     end
     minx=min(min(coords_src(:,1),coords_src(:,4)));
     maxx=max(max(coords_src(:,1),coords_src(:,4)));
@@ -37,20 +39,28 @@ try
         coordY_prof=miny-SB:dy:maxy+SB;
     end
     t_fault=t_fault/1000;
-    cond_radius = cond_radius*ones([size(coords_src,1),1]);
-    waitbar(1,h,'Parsing input data... Done!')
+%     cond_radius = cond_radius*ones([size(coords_src,1),1]);
+    if ~ supress_messages
+        waitbar(1,h,'Parsing input data... Done!')
+    end
     
-    waitbar(0,h,'Subdividing conductors...')
+    if ~ supress_messages
+        waitbar(0,h,'Subdividing conductors...')
+    end
     coords_src=subdivcond([coords_src cond_radius],MAX_LEN);
     R=zeros(size(coords_src,1));
     l=coords_src(:,10);
     cond_radius=coords_src(:,11);
-    waitbar(1,h,'Subdividing conductors... Done!')
+    if ~ supress_messages
+        waitbar(1,h,'Subdividing conductors... Done!')
+    end
     
     for o=1:size(coords_src,1)
         for j=1:size(coords_src,1)
-            msg = sprintf('Computing matrix coefficient terms... Segment %i / %i.',o,j);
-            waitbar(o/size(coords_src,1),h,msg);
+            if ~ supress_messages
+                msg = sprintf('Computing matrix coefficient terms... Segment %i / %i.',o,j);
+                waitbar(o/size(coords_src,1),h,msg);
+            end
             this_xs=coords_src(o,1);
             this_ys=coords_src(o,2);
             this_zs=coords_src(o,3);
@@ -79,20 +89,28 @@ try
         end
     end
     
-    msg = sprintf('Inverting coefficient matrix %i x %i...',o,j);
-    waitbar(0,h,msg);
+    if ~ supress_messages
+        msg = sprintf('Inverting coefficient matrix %i x %i...',o,j);
+        waitbar(0,h,msg);
+    end
     lambda=R\ones([size(coords_src,1),1]);
-    msg = sprintf('Inverting coefficient matrix %i x %i... Done!',o,j);
-    waitbar(1,h,msg);
-    
-    waitbar(0,h,'Computing leakage current densities...');
+    if ~ supress_messages
+        msg = sprintf('Inverting coefficient matrix %i x %i... Done!',o,j);
+        waitbar(1,h,msg);
+    end
+    if ~ supress_messages
+        waitbar(0,h,'Computing leakage current densities...');
+    end
     V = i_src / sum(lambda.*l);
     delta=lambda*V;
     Ii=delta.*l;
     Rg=V/i_src;
-    waitbar(1,h,'Computing leakage current densities... Done!')
-    
-    waitbar(0,h,'Computing surface potentials...')
+    if ~ supress_messages
+        waitbar(1,h,'Computing leakage current densities... Done!')
+    end
+    if ~ supress_messages
+        waitbar(0,h,'Computing surface potentials...')
+    end
     [X,Y]=meshgrid(coordX_prof, coordY_prof);
     Ib=0.116/sqrt(t_fault);
     
@@ -113,8 +131,10 @@ try
     for i=1:size(X,1)
         for j=1:size(Y,2)
             for k=1:size(coords_src,1)
-                msg = sprintf('Computing surface potentials... Point (%i , %i) / Source %i.',i,j,k);
-                waitbar(i/size(X,1),h,msg);
+                if ~ supress_messages
+                    msg = sprintf('Computing surface potentials... Point (%i , %i) / Source %i.',i,j,k);
+                    waitbar(i/size(X,1),h,msg);
+                end
                 this_x0=X(i,j);
                 this_y0=Y(i,j);
                 this_z0=0;
@@ -135,7 +155,9 @@ try
     Et=abs(GPR-V);
     [Usx,Usy]=gradient(Us,1,1);
     TotalGrad=(Usx.^2+Usy.^2).^0.5;
-    waitbar(1,h,'Computing surface potentials... Done!')
+    if ~ supress_messages
+        waitbar(1,h,'Computing surface potentials... Done!')
+    end
     
     if plot_surf
         figure(1)
@@ -194,7 +216,7 @@ try
         title(sprintf('Step voltages distribution, E_{p,lim} = %1.0f V',Ep_max));
     end
     
-
+    
     
     if plot_curr
         for i=1:size(coords_src,1)
@@ -220,35 +242,50 @@ try
         axis equal
     end
     
-    close(h);
+    if  ~ supress_messages
+        close(h);
+    end
     
     tf=toc(ti);
     
+    xx=[coords_src(:,1);coords_src(:,4)];
+    yy=[coords_src(:,2);coords_src(:,5)];
+    k = boundary(xx,yy);
+    xv=xx(k);
+    yv=yy(k);
+    [in,on] = inpolygon(X,Y,xv,yv); % to find values inside the grid
+    
+     
     fprintf('\n\nCOMPUTATION SUMMARY:\n--------------------\n');
     fprintf('    Top layer resistivity:                   rho_top = %g ohm.m\n',rho_top);
     fprintf('    Bottom layer resistivity:                rho_bottom = %g ohm.m\n',rho_bottom);
     fprintf('    Top layer thickness:                     h = %g m\n',h_top);
     fprintf('    Reflection coefficient:                  k = %g\n',((rho_top-rho_bottom)/(rho_top+rho_bottom)));
-    fprintf('    Energization current:                    I = %g + j%g = %g A |_ %g°\n',real(i_src),imag(i_src),abs(i_src),rad2deg(angle(i_src)));
-    fprintf('    Ground grid GPR:                         V = %g + j%g = %g V |_ %g°\n',real(V),imag(V),abs(V),rad2deg(angle(V)));
-    fprintf('    Ground impedance:                        Rg = %g + j%g = %g ohms |_ %g°\n',real(Rg),imag(Rg),abs(Rg),rad2deg(angle(Rg)));
+    fprintf('    Energization current:                    I = %g + j%g = %g A %c %g°\n',real(i_src),imag(i_src),abs(i_src),char( hex2dec('2220') ),rad2deg(angle(i_src)));
+    fprintf('    Ground grid GPR:                         V = %g + j%g = %g V %c %g°\n',real(V),imag(V),abs(V),char( hex2dec('2220') ),rad2deg(angle(V)));
+    fprintf('    Ground impedance:                        Rg = %g + j%g = %g ohms %c %g°\n',real(Rg),imag(Rg),abs(Rg),char( hex2dec('2220') ),rad2deg(angle(Rg)));
     fprintf('    Maximum surface GPR:                     Us,max = %g V\n',max(max(Us)))
     fprintf('    Fault time:                              t = %g s\n',t_fault);
     fprintf('    Cover material resistivity:              rho_cov = %g ohm.m\n',rho_cover);
     fprintf('    Cover layer thickness:                   h_cov = %g m\n',h_cover);
     fprintf('    Maximum allowable touch voltage:         Et,lim = %g V\n',Et_max);
-    fprintf('    Maximum touch voltage:                   Et,max = %g V\n',max(max(Et)));
+    fprintf('    Maximum touch voltage inside grid:       Et,max = %g V\n',max(Et(in|on)));
     fprintf('    Maximum allowable step voltage:          Ep,lim = %g V\n',Ep_max);
-    fprintf('    Maximum step voltage:                    Ep,max = %g V\n',max(max(TotalGrad)));
+    fprintf('    Maximum step voltage inside grid:        Ep,max = %g V\n',max(TotalGrad(in|on)));
     fprintf('    Number of source subdivisions:           Nf = %i \n',size(coords_src,1));
     fprintf('    Number of surface observation points:    Ns = %i \n\n', size(coordX_prof,2) * size(coordY_prof,2));
     disp(['    *** ELAPSED TIME:                      ' secs2hms(tf)]);
     
-    save('groundcalc_data.mat');
+    if save_file
+        save('groundcalc_data.mat');
+    end
+
+    
+    f = msgbox('All done! Check the Command Window for the computation summary.', 'GroundCalc','modal');
     
 catch MExc
     close(h);
-end
+    end
 
 end
 
