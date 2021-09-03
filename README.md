@@ -9,3 +9,5 @@ The main technical highlights are:
 - Calculates grounding resistance, GPR, touch voltage and step voltage distributions.
 - Calculates safe limits according to IEEE Std. 80.
 - Interactive plot control.
+
+[![View GroundCalc on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/98739-groundcalc)
