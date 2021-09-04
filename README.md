@@ -1,5 +1,5 @@
 # GroundCalc
-A very simple grounding grid calculator for didatic purposes.
+A very simple grounding grid calculator for didactic purposes.
 
 This tool enables the user to carry out simplified grounding studies involving arbitrary grids and two-layered soils, based on an equipotential assumption and using the microsegmentation method proposed by Dawalibi et al.
 
