@@ -3,7 +3,7 @@ function [ subdivcond ] = f( vec_in, MAX_LEN )
 
 vec_out=[0 0 0 0 0 0];
 
-if size(vec_in,2)==7
+if size(vec_in,2)==9
     
     for i=1:size(vec_in,1)
         
@@ -14,6 +14,8 @@ if size(vec_in,2)==7
         zi=vec_in(i,3);
         zf=vec_in(i,6);
 		r=vec_in(i,7);
+		rho=vec_in(i,8);
+		mur=vec_in(i,9);
         
         
         llen = sqrt((xf-xi)^2+(yf-yi)^2+(zf-zi)^2);
@@ -23,10 +25,14 @@ if size(vec_in,2)==7
                 vec_out=[xi yi zi xf yf zf];
                 L=[llen];
 				R=[r];
+				Rho=[rho];
+				Mur=[mur];
             else
                 vec_out=[vec_out; xi yi zi xf yf zf];
                 L=[L; llen];
 				R=[R; r];
+				Rho=[Rho; rho];
+				Mur=[Mur; mur];
             end
         else
             n_subdiv=ceil(llen/MAX_LEN);
@@ -44,10 +50,14 @@ if size(vec_in,2)==7
                     vec_out=[xi_div yi_div zi_div xf_div yf_div zf_div];
                     L=[llen_div];
 					R=[r];
+                    Rho=[rho];
+    				Mur=[mur];
                 else
                     vec_out=[vec_out; xi_div yi_div zi_div xf_div yf_div zf_div];
                     L=[L; llen_div];
 					R=[R; r];
+                    Rho=[Rho; rho];
+    				Mur=[Mur; mur];
                 end
             end
             
@@ -56,9 +66,9 @@ if size(vec_in,2)==7
     end
     
     vec_mid = [(vec_out(:,1)+vec_out(:,4))./2 (vec_out(:,2)+vec_out(:,5))./2 (vec_out(:,3)+vec_out(:,6))./2];
-    subdivcond = horzcat(vec_out,vec_mid, L, R);
+    subdivcond = horzcat(vec_out,vec_mid, L, R, Rho, Mur);
     
-elseif size(vec_in,2)==4
+elseif size(vec_in,2)==6
     
     
     for i=1:size(vec_in,1)-1
@@ -70,6 +80,8 @@ elseif size(vec_in,2)==4
         zi=vec_in(i,3);
         zf=vec_in(i+1,3);
 		r=vec_in(i,4);
+		rho=vec_in(i,5);
+		mur=vec_in(i,6);
         
         llen = sqrt((xf-xi)^2+(yf-yi)^2+(zf-zi)^2);
         
@@ -78,10 +90,14 @@ elseif size(vec_in,2)==4
                 vec_out=[xi yi zi xf yf zf];
                 L=[llen];
 				R=[r];
+				Rho=[rho];
+				Mur=[mur];
             else
                 vec_out=[vec_out; xi yi zi xf yf zf];
                 L=[L; llen];
 				R=[R; r];
+                Rho=[Rho; rho];
+                Mur=[Mur; mur];
             end
         else
             n_subdiv=ceil(llen/MAX_LEN);
@@ -99,10 +115,14 @@ elseif size(vec_in,2)==4
                     vec_out=[xi_div yi_div zi_div xf_div yf_div zf_div];
                     L=[llen_div];
 					R=[r];
+                    Rho=[rho];
+				Mur=[mur];
                 else
                     vec_out=[vec_out; xi_div yi_div zi_div xf_div yf_div zf_div];
                     L=[L; llen_div];
 					R=[R; r];
+                    Rho=[Rho; rho];
+                    Mur=[Mur; mur];
                 end
             end
             
@@ -112,7 +132,7 @@ elseif size(vec_in,2)==4
     
     
     vec_mid = [(vec_out(:,1)+vec_out(:,4))./2 (vec_out(:,2)+vec_out(:,5))./2 (vec_out(:,3)+vec_out(:,6))./2];
-    subdivcond = horzcat(vec_out,vec_mid,L,R);
+    subdivcond = horzcat(vec_out,vec_mid,L,R, Rho, Mur);
     
 end
 end
