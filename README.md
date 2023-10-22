@@ -16,3 +16,7 @@ The main technical highlights are:
 ### Acknowledgements
 
 GroundCalc has been actively maintained and improved by [Amauri Martins-Britto](mailto:amaurigmartins@gmail.com) and [João Pedro Ivo Finamore](mailto:jpe.ivo@gmail.com).
+
+### Restrictions of use
+
+We appreciate the interest in our work and we invite the interested users to use our codes as necessary, as long as they are not embedded in any commercial software, which is **strictly prohibited**. However, if you use the GroundCalc as a part of scientific research, we kindly ask you to refer to our published papers. Refer to the CITATION file.
