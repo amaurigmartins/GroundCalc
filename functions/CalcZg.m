@@ -48,6 +48,9 @@ for o=1:size(coords_src,1)      %Loop que preenche a matriz R
     end
 end
 
+%comments are for the weak
+R=enforce_symm(R);
+
 if ~ supress_messages
     app.ProgrammessagesTextArea.Value{end+1} = [sprintf('%s: Inverting coefficients matrix...',timestamp(now))];
 end

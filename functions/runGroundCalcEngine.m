@@ -59,10 +59,23 @@ end
 ti=tic;
 
 previous_file=fullfile(this_dir,'grid_data.mat');
-if isfile(previous_file) && ~enforce_rebuild
-    if ~ supress_messages
-        app.ProgrammessagesTextArea.Value{end+1} = [sprintf('%s: Found a ''grid_data.mat'' file from a previous input session. Let us take a shortcut...',timestamp(now))];
+if isfile(previous_file)
+    testdata=load(previous_file);
+
+
+    if ~(((testdata.enforce_equipotential==enforce_equipotential) && (testdata.enforce_segmentationonly==enforce_segmentationonly)) && (isfield(testdata,'Zbus') && ~enforce_equipotential))
+        enforce_rebuild=true;
+        if ~ supress_messages
+            app.ProgrammessagesTextArea.Value{end+1} = [sprintf('%s: Found a ''grid_data.mat'' file from a previous input session, but current computation settings are different. Let us rebuild this big boy...',timestamp(now))];
+        end
+    else
+        if ~ supress_messages
+            app.ProgrammessagesTextArea.Value{end+1} = [sprintf('%s: Found a ''grid_data.mat'' file from a previous input session. Let us take a shortcut...',timestamp(now))];
+        end
     end
+end
+
+if isfile(previous_file) && ~enforce_rebuild
     load(previous_file);
 else
     %    Fixing overlapping conductors
@@ -115,7 +128,7 @@ else
     cond_rho=coords_src(:,12);
     cond_mur=coords_src(:,13);
 
-    save(previous_file,'coords_src','cond_radius','cond_rho','cond_mur');
+    save(previous_file,'coords_src','cond_radius','cond_rho','cond_mur','enforce_equipotential','enforce_segmentationonly');
 
     if ~ supress_messages
         app.ProgrammessagesTextArea.Value{end+1} = [sprintf('%s: *** Progress saved into file ''grid_data.mat''. Future runs will recover from this point. You may redefine your system by ticking the box ''Rebuild circuit model from scratch'' in the ''Computations'' tab.',timestamp(now))];
@@ -272,7 +285,7 @@ Et=abs(GPR-min(V));  %Considering the worst case cenario
 TotalGrad=(Usx.^2+Usy.^2).^0.5;
 
 if plot_surf
-    figure(1)
+    f=figure(1);
     if plot_grid
         for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(Us))*1.05 max(max(Us))*1.05],'k-','LineWidth',1.5); hold on; end;
     end
@@ -284,11 +297,11 @@ if plot_surf
     colorbar
     colormap(jet);
     title(sprintf('Surface GPR Distribution, GPR_{max} = %1.0f V',max(max(Us))));
-    cameratoolbar('show');
+    cameratoolbar(f,'show');
 end
 
 if plot_touch
-    figure(2)
+    f=figure(2);
     if plot_grid
         for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(Et))*1.05 max(max(Et))*1.05],'k-','LineWidth',1.5); hold on; end;
     end
@@ -306,11 +319,11 @@ if plot_touch
     end
     caxis([vmin vmax])
     title(sprintf('Touch voltages distribution, E_{t,lim} = %1.0f V',Et_max));
-    cameratoolbar('show');
+    cameratoolbar(f,'show');
 end
 
 if plot_step
-    figure(3)
+    f=figure(3);
     if plot_grid
         for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(TotalGrad))*1.05 max(max(TotalGrad))*1.05],'k-','LineWidth',1.5); hold on; end;
     end
@@ -328,7 +341,7 @@ if plot_step
     end
     caxis([vmin vmax])
     title(sprintf('Step voltages distribution, E_{p,lim} = %1.0f V',Ep_max));
-    cameratoolbar('show');
+    cameratoolbar(f,'show');
 end
 
 
@@ -344,7 +357,7 @@ if plot_curr
             offy=0.0002;
             offz=0.0003;
         end
-        figure(4)
+        f=figure(4);
         clinep([coords_src(i,1) coords_src(i,4)+offx],[coords_src(i,2) coords_src(i,5)+offy],[coords_src(i,3) coords_src(i,6)+offz],[delta(i) delta(i)]);
         hold on;
     end
@@ -355,7 +368,7 @@ if plot_curr
     hold off;
     title('Leakage currents distribution')
     axis equal
-    cameratoolbar('show');
+    cameratoolbar(f,'show');
 end
 
 tf=toc(ti);
@@ -367,8 +380,13 @@ xv=xx(k);
 yv=yy(k);
 [in,on] = inpolygon(X,Y,xv,yv); % to find values inside the grid
 
+if enforce_equipotential;equi_str='YES';else; equi_str='NO';end
+if enforce_segmentationonly;ptsrc_str='YES';else; ptsrc_str='NO';end
+
 app.ProgrammessagesTextArea.Value{end+1} = [sprintf('%s: Process finished!',timestamp(now))];
 app.ProgrammessagesTextArea.Value{end+1} = [sprintf('\n\nCOMPUTATION SUMMARY:\n----------------------------------------\n')];
+app.ProgrammessagesTextArea.Value{end+1} = [sprintf('Equipotential assumption: %s \n', equi_str)];
+app.ProgrammessagesTextArea.Value{end+1} = [sprintf('Point source model: %s \n', ptsrc_str)];
 app.ProgrammessagesTextArea.Value{end+1} = [sprintf('Top layer resistivity: %g ohm.m\n', rho_top)];
 app.ProgrammessagesTextArea.Value{end+1} = [sprintf('Bottom layer resistivity: %g ohm.m\n', rho_bottom)];
 app.ProgrammessagesTextArea.Value{end+1} = [sprintf('Top layer thickness: %g m\n', h_top)];
@@ -405,7 +423,7 @@ else
 
 end
 
-app.ProgrammessagesTextArea.Value{end+1} = [sprintf('*** ELAPSED TIME: %s', secs2hms(tf))];
+app.ProgrammessagesTextArea.Value{end+1} = [sprintf('*** ELAPSED TIME: %s\n\n\n', secs2hms(tf))];
 
 if save_mat
     save(fullfile(this_dir,'groundcalc_results.mat'));
