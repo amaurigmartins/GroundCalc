@@ -137,7 +137,7 @@ end
 
 if ~enforce_equipotential
 
-    if ~(isfile(previous_file) && ~enforce_rebuild)
+%     if ~(isfile(previous_file) && ~enforce_rebuild)
         % Construindo a NetList
         node_coords = NodeCoordsCalc( coords_src );
 
@@ -160,11 +160,11 @@ if ~enforce_equipotential
         Ybus = YbusFromNet(NetList, 0, NumBus);
         Zbus = inv(Ybus);
 
-        if ~ supress_messages
-            app.ProgrammessagesTextArea.Value{end+1} = [sprintf('%s: *** Progress saved into file ''grid_data.mat''. Future runs will recover from this point. You may redefine your system by ticking the box ''Rebuild circuit model from scratch'' in the ''Computations'' tab.',timestamp(now))];
-        end
-        save(previous_file,'node_coords','Zg','Zint','NetList','NumBus','Ybus','Zbus','-append');
-    end
+%         if ~ supress_messages
+%             app.ProgrammessagesTextArea.Value{end+1} = [sprintf('%s: *** Progress saved into file ''grid_data.mat''. Future runs will recover from this point. You may redefine your system by ticking the box ''Rebuild circuit model from scratch'' in the ''Computations'' tab.',timestamp(now))];
+%         end
+%         save(previous_file,'node_coords','Zg','Zint','NetList','NumBus','Ybus','Zbus','-append');
+%     end
 
     % Calculando a tensão em cada nó
     if ~ supress_messages
@@ -284,8 +284,18 @@ Et=abs(GPR-min(V));  %Considering the worst case cenario
 [Usx,Usy]=gradient(Us,1,1);
 TotalGrad=(Usx.^2+Usy.^2).^0.5;
 
+%what
+allFigures = findall(0, 'Type', 'figure');
+if isempty(allFigures)
+    nextFigNumber = 1;
+elseif size(allFigures,1)==1 && isempty(allFigures(1).Number)
+    nextFigNumber = 1;
+else
+    nextFigNumber = max([allFigures(:).Number]) + 1;
+end
+
 if plot_surf
-    f=figure(1);
+    f=figure(nextFigNumber);
     if plot_grid
         for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(Us))*1.05 max(max(Us))*1.05],'k-','LineWidth',1.5); hold on; end;
     end
@@ -299,9 +309,10 @@ if plot_surf
     title(sprintf('Surface GPR Distribution, GPR_{max} = %1.0f V',max(max(Us))));
     cameratoolbar(f,'show');
 end
+nextFigNumber=nextFigNumber+1;
 
 if plot_touch
-    f=figure(2);
+    f=figure(nextFigNumber);
     if plot_grid
         for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(Et))*1.05 max(max(Et))*1.05],'k-','LineWidth',1.5); hold on; end;
     end
@@ -321,9 +332,11 @@ if plot_touch
     title(sprintf('Touch voltages distribution, E_{t,lim} = %1.0f V',Et_max));
     cameratoolbar(f,'show');
 end
+nextFigNumber=nextFigNumber+1;
+
 
 if plot_step
-    f=figure(3);
+    f=figure(nextFigNumber);
     if plot_grid
         for i=1:size(coords_src,1); plot3([coords_src(i,1) coords_src(i,4)],[coords_src(i,2) coords_src(i,5)],[max(max(TotalGrad))*1.05 max(max(TotalGrad))*1.05],'k-','LineWidth',1.5); hold on; end;
     end
@@ -343,8 +356,7 @@ if plot_step
     title(sprintf('Step voltages distribution, E_{p,lim} = %1.0f V',Ep_max));
     cameratoolbar(f,'show');
 end
-
-
+nextFigNumber=nextFigNumber+1;
 
 if plot_curr
     for i=1:size(coords_src,1)
@@ -357,7 +369,7 @@ if plot_curr
             offy=0.0002;
             offz=0.0003;
         end
-        f=figure(4);
+        f=figure(nextFigNumber);
         clinep([coords_src(i,1) coords_src(i,4)+offx],[coords_src(i,2) coords_src(i,5)+offy],[coords_src(i,3) coords_src(i,6)+offz],[delta(i) delta(i)]);
         hold on;
     end
@@ -370,6 +382,7 @@ if plot_curr
     axis equal
     cameratoolbar(f,'show');
 end
+nextFigNumber=nextFigNumber+1;
 
 tf=toc(ti);
 
