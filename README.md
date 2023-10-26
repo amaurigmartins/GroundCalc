@@ -13,6 +13,14 @@ The main technical highlights are:
 - Calculates safe limits according to IEEE Std. 80.
 - Interactive plot control and grid preview.
 
+### Important information
+
+GroundCalc uses external tools that must be downloaded from the corresponding sources and placed in the appropriate directories, listed below:
+
+-  Sebastian (2023). Read DXF File Data (https://www.mathworks.com/matlabcentral/fileexchange/24572-read-dxf-file-data), MATLAB Central File Exchange. Retrieved October 26, 2023.
+
+These codes are properties of the respective authors, with all due credits given. Observe any restrictions and licensing/usage requirements in the websites above.
+
 ### Acknowledgements
 
 GroundCalc has been actively maintained and improved by [Amauri Martins-Britto](mailto:amaurigmartins@gmail.com) and [João Pedro Ivo Finamore](mailto:jpe.ivo@gmail.com).
