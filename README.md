@@ -13,6 +13,7 @@ The main technical highlights are:
 - Calculates safe limits according to IEEE Std. 80.
 - Interactive plot control and grid preview.
 
+
 ### Important information
 
 GroundCalc uses external tools that must be downloaded from the corresponding sources and placed in the appropriate directories, listed below:
@@ -21,9 +22,16 @@ GroundCalc uses external tools that must be downloaded from the corresponding so
 
 These codes are properties of the respective authors, with all due credits given. Observe any restrictions and licensing/usage requirements in the websites above.
 
+
 ### Acknowledgements
 
 GroundCalc has been actively maintained and improved by [Amauri Martins-Britto](mailto:amaurigmartins@gmail.com) and [João Pedro Ivo Finamore](mailto:jpe.ivo@gmail.com).
+
+
+### DISCLAIMER
+
+This is not a professional power grounding analysis tool. The equations and methods implemented are fairly accurate for small to medium sized geometries at the mains frequency and that's all. 
+
 
 ### Restrictions of use
 
