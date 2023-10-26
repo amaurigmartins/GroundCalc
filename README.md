@@ -2,14 +2,14 @@
 
 # GroundCalc
 
-MATLAB toolbox designed in MATLAB for grounding grids analysis.
+MATLAB toolbox designed for grounding grids analysis.
 
 Made for educational purposes, this tool enables the user to carry out simplified (but not that much) grounding studies involving arbitrary grids and two-layered soils, using the microsegmentation method proposed by Dawalibi et al. It is possible to perform simulations using the good-ol' equipotential assumption, as well as accounting for the internal impedances of conductors.
 
 The main technical highlights are:
 - Intuitive, self-explaining UI, which requires a minimum of data entry.
 - Ability to load conductor coordinates from CSV or TXT files, including AutoCAD data extractions and DXF files.
-- Calculates grounding resistance, GPR, leakage currents, touch voltage and step voltage distributions.
+- Calculates grounding impedance, GPR, leakage currents, touch voltage and step voltage distributions.
 - Calculates safe limits according to IEEE Std. 80.
 - Interactive plot control and grid preview.
 
