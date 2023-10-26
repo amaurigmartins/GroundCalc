@@ -2,9 +2,7 @@
 
 # GroundCalc
 
-MATLAB toolbox designed for analysis of grounding grids.
-
-Made for educational purposes, this tool enables the user to carry out simplified (but not that much) grounding studies involving arbitrary grids and two-layered soils, using the microsegmentation method proposed by Dawalibi et al. It is possible to perform simulations using the good-ol' equipotential assumption, as well as accounting for the internal impedances of conductors.
+Made for educational purposes, GroundCalc enables the user to carry out simplified (but not that much) grounding studies involving arbitrary grids and two-layered soils, using the microsegmentation method proposed by Dawalibi et al. It is possible to perform simulations using the good-ol' equipotential assumption, as well as accounting for the internal impedances of conductors.
 
 The main technical highlights are:
 - Intuitive, self-explaining UI, which requires a minimum of data entry.
