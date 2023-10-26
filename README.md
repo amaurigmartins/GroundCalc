@@ -2,7 +2,7 @@
 
 # GroundCalc
 
-MATLAB toolbox designed for grounding grids analysis.
+MATLAB toolbox designed for analysis of grounding grids.
 
 Made for educational purposes, this tool enables the user to carry out simplified (but not that much) grounding studies involving arbitrary grids and two-layered soils, using the microsegmentation method proposed by Dawalibi et al. It is possible to perform simulations using the good-ol' equipotential assumption, as well as accounting for the internal impedances of conductors.
 
@@ -18,7 +18,7 @@ The main technical highlights are:
 
 GroundCalc uses external tools that must be downloaded from the corresponding sources and placed in the appropriate directories, listed below:
 
--  Sebastian (2023). Read DXF File Data (https://www.mathworks.com/matlabcentral/fileexchange/24572-read-dxf-file-data), MATLAB Central File Exchange. Retrieved October 26, 2023.
+- Sebastian (2023). Read DXF File Data (https://www.mathworks.com/matlabcentral/fileexchange/24572-read-dxf-file-data), MATLAB Central File Exchange. Retrieved October 26, 2023.
 
 These codes are properties of the respective authors, with all due credits given. Observe any restrictions and licensing/usage requirements in the websites above.
 
@@ -28,9 +28,9 @@ These codes are properties of the respective authors, with all due credits given
 GroundCalc has been actively maintained and improved by [Amauri Martins-Britto](mailto:amaurigmartins@gmail.com) and [João Pedro Ivo Finamore](mailto:jpe.ivo@gmail.com).
 
 
-### DISCLAIMER
+### Disclaimer
 
-This is not a professional power grounding analysis tool. The equations and methods implemented are fairly accurate for small to medium sized geometries at the mains frequency and that's all. 
+This is not a professional power grounding simulation tool. The takeaway here is to put in perspective the design errors that may occur when overly simplified methods are adopted, in particular when conductor impedances and neutral return currents are neglected. The equations and methods implemented are fairly accurate for small to medium sized geometries at the mains frequency and that's all. DO NOT USE THIS FOR A REAL DESIGN. Go use CDEGS instead. Do not use copycat generic cheap software either. This is about human lifes, for God's sake.
 
 
 ### Restrictions of use
