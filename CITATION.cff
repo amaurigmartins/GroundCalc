@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+title: GroundCalc
+message: ' Toolbox in MATLAB designed for grounding grids analysis '
+type: software
+authors:
+  - given-names: Amauri
+    family-names: Martins-Britto
+    email: amaurigmartins@gmail.com
+    orcid: 'https://orcid.org/0000-0002-2691-9061'
+    affiliation: University of Brasília
+  - given-names: João Pedro
+    family-names: Cardoso Finamore Ivo
+    email: jpe.ivo@gmail.com
+    affiliation: University of Brasília
+    orcid: 'https://orcid.org/0009-0008-1356-4565'
+identifiers:
+  - type: doi
+    value: 10.1109/TEMC.2023.3244095
+    description: >-
+      Total AC Interferences Between a Power Line Subject to a Single-Phase Fault and a Nearby Pipeline With Multilayered Soil.
+repository-code: 'https://github.com/amaurigmartins/groundcalc'
+url: >-
+  https://www.mathworks.com/matlabcentral/fileexchange/98739-groundcalc
+abstract: >-
+  Made for educational purposes, this tool enables the user to carry out simplified (but not that much) grounding studies involving arbitrary grids and two-layered soils, using the microsegmentation method proposed by Dawalibi et al. It is possible to perform simulations using the good-ol' equipotential assumption, as well as accounting for the internal impedances of conductors.
+version: 1.0.0.5
+date-released: '2023-10-26'
