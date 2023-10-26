@@ -19,4 +19,6 @@ GroundCalc has been actively maintained and improved by [Amauri Martins-Britto](
 
 ### Restrictions of use
 
-We appreciate the interest in our work and we invite the interested users to use our codes as necessary, as long as they are not embedded in any commercial software, which is **strictly prohibited**. However, if you use the GroundCalc as a part of scientific research, we kindly ask you to refer to our published papers. Refer to the CITATION file.
+We appreciate the interest in our work and we invite the interested users to use our codes as necessary, as long as they are not embedded in any commercial software, which is **strictly prohibited**. However, if you use the GroundCalc as a part of scientific research, we kindly ask you to refer to one of our published papers:
+
+- C. M. Moraes, G. H. S. Matos, A. G. Martins-Britto, K. L. M. Silva, F. V. Lopes, "Total AC Interferences Between a Power Line Subject to a Single-Phase Fault and a Nearby Pipeline With Multilayered Soil," in IEEE Transactions on Electromagnetic Compatibility, pp. 585-594, Vol. 65, Issue: 2, ISSN 0018-9375, Feb 2023, doi: 10.1109/TEMC.2023.3244095.
