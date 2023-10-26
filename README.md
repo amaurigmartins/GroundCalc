@@ -11,6 +11,7 @@ The main technical highlights are:
 - Ability to load conductor coordinates from CSV or TXT files, including AutoCAD data extractions and DXF files.
 - Calculates grounding impedance, GPR, leakage currents, touch voltage and step voltage distributions.
 - Calculates safe limits according to IEEE Std. 80.
+- It is possible to specify the point where the fault is applied and the neutral return point. 
 - Interactive plot control and grid preview.
 
 
