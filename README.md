@@ -29,7 +29,7 @@ GroundCalc has been actively maintained and improved by [Amauri Martins-Britto](
 
 ### Disclaimer
 
-This is not a professional power grounding simulation tool. The takeaway here is to put in perspective the design errors that may occur when overly simplified methods are adopted, in particular when conductor impedances and neutral return currents are neglected. The equations and methods implemented are fairly accurate for small to medium sized geometries at the mains frequency and that's all. DO NOT USE THIS FOR A REAL DESIGN. Go use CDEGS instead. Do not use copycat generic cheap software either. This is about human lifes, for God's sake.
+This is not a professional power grounding simulation tool. The takeaway here is to put in perspective the design errors that may occur when overly simplified methods are adopted, in particular when conductor impedances and neutral return currents are neglected. The equations and methods implemented are fairly accurate for small to medium sized geometries at the mains frequency and that's all. DO NOT USE THIS FOR A REAL DESIGN. Go use CDEGS instead. Do not use spaghetti-copycat-generic-cheap software either. This is about human lifes, for God's sake.
 
 
 ### Restrictions of use
