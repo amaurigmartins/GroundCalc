@@ -34,6 +34,7 @@ This is not a professional power grounding simulation tool. The takeaway here is
 
 ### Restrictions of use
 
-We appreciate the interest in our work and we invite the interested users to use our codes as necessary, as long as they are not embedded in any commercial software, which is **strictly prohibited**. However, if you use the GroundCalc as a part of scientific research, we kindly ask you to refer to one of our published papers:
+We appreciate the interest in our work and we invite the interested users to use our codes as necessary, as long as they are not embedded in any commercial software, which is **strictly prohibited**. If you use the GroundCalc as a part of scientific research, we kindly ask you to refer to one of our published papers:
 
+- J. P. C. F. Ivo, C. M. Moraes and A. G. Martins-Britto, "Enhanced Circuit-Theory-Based Model for Accurate Simulation of Electrically Large Grounding Systems," 2023 Workshop on Communication Networks and Power Systems (WCNPS), Brasilia, Brazil, 2023, pp. 1-7, doi: 10.1109/WCNPS60622.2023.10344583.
 - C. M. Moraes, G. H. S. Matos, A. G. Martins-Britto, K. L. M. Silva, F. V. Lopes, "Total AC Interferences Between a Power Line Subject to a Single-Phase Fault and a Nearby Pipeline With Multilayered Soil," in IEEE Transactions on Electromagnetic Compatibility, pp. 585-594, Vol. 65, Issue: 2, ISSN 0018-9375, Feb 2023, doi: 10.1109/TEMC.2023.3244095.
