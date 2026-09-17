@@ -11,8 +11,26 @@ function [Ybus] = YbusFromNet(NetList,MutualNetList,NumBus)
 %[Branch number  Branch number  Mutual Impedance; ...];
 
 
-if MutualNetList == 0
-    MutualNetList = [1 2 0];
+% Without mutual impedances, assemble branch admittances directly. This
+% avoids a dense branch-impedance inverse and also supports one branch.
+if isempty(MutualNetList) || isequal(MutualNetList, 0)
+    Ybus = zeros(NumBus);
+    for k=1:size(NetList,1)
+        from = NetList(k,2);
+        to = NetList(k,3);
+        y = 1/NetList(k,4);
+        if from ~= 0
+            Ybus(from,from) = Ybus(from,from) + y;
+        end
+        if to ~= 0
+            Ybus(to,to) = Ybus(to,to) + y;
+        end
+        if from ~= 0 && to ~= 0
+            Ybus(from,to) = Ybus(from,to) - y;
+            Ybus(to,from) = Ybus(to,from) - y;
+        end
+    end
+    return;
 end
 
 %Now we can obtain the matrix Zpr
